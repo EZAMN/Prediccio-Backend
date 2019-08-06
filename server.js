@@ -1,10 +1,10 @@
-import express from 'express'
-import bodyParser from 'body-parser'
-import session from 'express-session'
-import winston from './config/winston.js'
-import cors from 'cors'
-import errorhandler from 'errorhandler'
-import rutes from './rutes'
+import express from 'express';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+import winston from './config/winston.js';
+import cors from 'cors';
+import errorhandler from 'errorhandler';
+import rutes from './rutes';
 
 winston.log('info', 'Initializing express server.');
 
