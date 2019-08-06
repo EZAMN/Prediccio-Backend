@@ -1,5 +1,5 @@
 import jwt from 'express-jwt'
-const secret = require('../config').secret;
+import config from '../config'
 
 // Extreu els headers per la autoritzacio jwt
 function getTokenFromHeader(req){
@@ -13,12 +13,12 @@ function getTokenFromHeader(req){
 // Genera dos objectes d'autoritzacio, un d'autoritzacio opcional i un requerit (per si es necesites)
 const auth = {
   required: jwt({
-    secret: secret,
+    secret: config.secret,
     userProperty: 'payload',
     getToken: getTokenFromHeader
   }),
   optional: jwt({
-    secret: secret,
+    secret: config.secret,
     userProperty: 'payload',
     credentialsRequired: false,
     getToken: getTokenFromHeader
