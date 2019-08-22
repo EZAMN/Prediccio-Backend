@@ -1,6 +1,6 @@
-import mPrediccio from '../models/mPrediccio'
-import winston from '../config/winston'
-import literals from '../dades/literals'
+import mPrediccio from '../models/mPrediccio';
+import winston from '../config/winston';
+import literals from '../dades/literals';
 
 //Controlador de prediccions, de moment molt senzill, nomes controla que les dades es trobin
 class cPrediccio {

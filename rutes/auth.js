@@ -1,5 +1,5 @@
-import jwt from 'express-jwt'
-import config from '../config'
+import jwt from 'express-jwt';
+import config from '../config';
 
 // Extreu els headers per la autoritzacio jwt
 function getTokenFromHeader(req){

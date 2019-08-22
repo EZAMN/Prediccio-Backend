@@ -1,7 +1,7 @@
-import mMunicipi from '../models/mMunicipi'
-import cPrediccio from './cPrediccio'
-import winston from '../config/winston'
-import literals from '../dades/literals'
+import mMunicipi from '../models/mMunicipi';
+import cPrediccio from './cPrediccio';
+import winston from '../config/winston';
+import literals from '../dades/literals';
 
 //Controlador de prediccions, de moment molt senzill, nomes controla que les dades es trobin i hi addereix les prediccions
 class cMunicipi {

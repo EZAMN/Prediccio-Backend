@@ -1,8 +1,8 @@
-import auth from '../auth'
-import cMunicipi from '../../controladors/cMunicipi'
-import winston from '../../config/winston'
-import literals from '../../dades/literals' // Arxiu per a guardar traduccions i missatges
-import express from 'express'
+import auth from '../auth';
+import cMunicipi from '../../controladors/cMunicipi';
+import winston from '../../config/winston';
+import literals from '../../dades/literals'; // Arxiu per a guardar traduccions i missatges
+import express from 'express';
 var router = express.Router();
 
 // Ruta per extreure totes les metadades dels municipis disponibles

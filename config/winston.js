@@ -1,4 +1,4 @@
-import winston from 'winston'
+import winston from 'winston';
 
 // define the custom settings for each transport (file, console)
 var options = {

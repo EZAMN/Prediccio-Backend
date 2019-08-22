@@ -1,8 +1,8 @@
-import auth from '../auth'
-import cPrediccio from '../../controladors/cPrediccio'
-import winston from '../../config/winston'
-import literals from '../../dades/literals' // Arxiu per a guardar traduccions i missatges
-import express from 'express'
+import auth from '../auth';
+import cPrediccio from '../../controladors/cPrediccio';
+import winston from '../../config/winston';
+import literals from '../../dades/literals'; // Arxiu per a guardar traduccions i missatges
+import express from 'express';
 var router = express.Router();
 
 // Ruta per extreure prediccions d'un municipi concret, nomes accepta numeros al codi

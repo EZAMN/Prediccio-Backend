@@ -1,5 +1,5 @@
-import fs from 'fs'
-import winston from '../config/winston'
+import fs from 'fs';
+import winston from '../config/winston';
       
 
 //Clase per accedir a dades dels arxius JSON
