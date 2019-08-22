@@ -1,38 +1,46 @@
+import HTTPStatus from 'http-status';
 import mPrediccio from '../models/mPrediccio';
 import winston from '../config/winston';
 import literals from '../dades/literals';
 
+
 //Controlador de prediccions, de moment molt senzill, nomes controla que les dades es trobin
-class cPrediccio {
 
-  constructor() { //Carrega les dades del model
+export const obtenirPrediccio = (req, res, next) => {
 
-    winston.log('info', 'PREDICCIO CONTROLER: Loading prediccio controler');
-    this.imPrediccio = new mPrediccio;
+  const codi = req.params.codi;
 
+  if(isNaN(codi)){
+    winston.log('warn', `PREDICCIO API: /prediccio/codi got a wrong code: ${codi}`);
+    //Torna un error si el codi no fos un numero
+    return res.status(HTTPStatus.BAD_REQUEST).json({error: literals['codiNaN']});
   }
 
-  // Getters
-  donaPrediccio(codi) { //retorna prediccions d'un municipi a partir del codi
+  winston.log('info', `PREDICCIO API: Serving prediction data for code: ${codi}`);
 
-    winston.log('info', `PREDICCIO CONTROLER: Accessing prediccio data for code ${codi}`);
-    let prediccions = this.imPrediccio.donaItem(codi);
-    
-    if (typeof prediccions !== 'undefined'){
-
-      winston.log('info', `PREDICCIO CONTROLER: Serving prediccio data for code ${codi}`);
-      return prediccions;
-
-    }else{
-
-      winston.log('error', `PREDICCIO CONTROLER: Prediccions ${codi} data not found`);
-      //torna un error si no es troba el municipi
-      return {status:404, error: literals['municipiNoTrobat']};
-
-    }
-
-  }
+  //Retorna les dades del municipi que li torna el controlador
+  let dades = donaPrediccio(codi);
+  if(typeof dades.error !== 'undefined') return res.status(dades.status).json(dades);
   
+  return res.status(HTTPStatus.OK).json(dades);
+
 }
 
-export default  cPrediccio;
+export const donaPrediccio = (codi) => {
+
+  winston.log('info', 'PREDICCIO CONTROLER: Loading prediccio model');
+  const imPrediccio = new mPrediccio;
+
+  winston.log('info', `PREDICCIO CONTROLER: Accessing prediccio data for code ${codi}`);
+  const prediccions = imPrediccio.donaItem(codi);
+  
+  if (typeof prediccions === 'undefined'){
+    winston.log('error', `PREDICCIO CONTROLER: Prediccions ${codi} data not found`);
+    //torna un error si no es troba el municipi
+    return {status:HTTPStatus.INTERNAL_SERVER_ERROR, error: literals['municipiNoTrobat']};
+  }
+
+  winston.log('info', `PREDICCIO CONTROLER: Serving prediccio data for code ${codi}`);
+  return prediccions;
+
+}

@@ -1,63 +1,61 @@
+import HTTPStatus from 'http-status';
 import mMunicipi from '../models/mMunicipi';
-import cPrediccio from './cPrediccio';
+import { donaPrediccio } from './cPrediccio';
 import winston from '../config/winston';
-import literals from '../dades/literals';
+import literals from '../dades/literals'; // Arxiu per a guardar traduccions i missatges
 
-//Controlador de prediccions, de moment molt senzill, nomes controla que les dades es trobin i hi addereix les prediccions
-class cMunicipi {
 
-  constructor() { //Carrega les dades del json
-    
-    winston.log('info', 'MUNICIPI CONTROLER: Loading municipi controler');
-    this.icPrediccio = "";
-    this.imMunicipi = new mMunicipi();
+//Controlador de prediccions, nomes controla que les dades es trobin i hi addereix les prediccions
 
+export const obtenirMunicipi = (req, res, next) => {
+
+  const codi = req.params.codi;
+
+  if(isNaN(codi)){
+    winston.log('warn', `MUNICIPI API: /municipis/codi got a NaN code: ${codi}`);
+    //Torna un error si el codi no fos un numero
+    return res.status(HTTPStatus.BAD_REQUEST).json({error: literals['codiNaN']});
   }
 
-  // Metodes
-  carregaPrediccions() { //Carrega el controlador de prediccions si no s'ha carregat
+  winston.log('info', `MUNICIPI API: Serving metadata for code: ${codi}`);
 
-    if(this.icPrediccio === ""){
+  //Carrega model de municipi
+  const imMunicipi = new mMunicipi();
+  const dades = imMunicipi.donaItem(codi);
 
-      winston.log('info', 'MUNICIPI CONTROLER: Calling prediccio controler');
-      this.icPrediccio = new cPrediccio();
-
-    }
-
+  if (typeof dades === 'undefined'){
+    winston.log('error', `MUNICIPI CONTROLER: Municipi ${codi} data not found`);
+    //torna un error de municipi no trobat
+    return res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json({error: literals['municipiNoTrobat']});
   }
 
-  // Getters
-  donaMunicipi(codi) { //retorna les dades i prediccions d'un municipi a partir del codi
+  winston.log('info', `MUNICIPI CONTROLER: Calling ${codi} prediccio data`);
+  //Retorna les dades del municipi que li torna el controlador
+  const prediccions = donaPrediccio(codi);
 
-    winston.log('info', `MUNICIPI CONTROLER: Calling ${codi} municipi data`);
-    //Carrega metadades del municipi
-    let municipi = this.imMunicipi.donaItem(codi);
-    if (typeof municipi !== 'undefined'){
-
-      this.carregaPrediccions();
-      winston.log('info', `MUNICIPI CONTROLER: Calling ${codi} prediccio data`);
-      //si s'ha trobat el municipi es torna les prediccions
-      municipi.prediccions = this.icPrediccio.donaPrediccio(codi);
-      //si hi ha municipi pero no prediccions s'afegeix un missatge d'error a l'apartat de prediccions del objecte
-
-      return municipi;
-
-    }else{
-
-      winston.log('error', `MUNICIPI CONTROLER: Municipi ${codi} data not found`);
-      //torna un error de municipi no trobat
-      return {status:404, error: literals['municipiNoTrobat']};
-
-    }
+  //if there are no predictions we return the plain object
+  if (typeof prediccions.error !== 'undefined'){
+    winston.log('error', `MUNICIPI CONTROLER: Municipi ${codi} prediction data not found`);
   }
 
-  get llistaMunicipis() { //retorna tota la llista de municipis
+  const response = { ...dades, prediccions }; 
 
-    let municipis = this.imMunicipi.donaLlista;
-    return municipis;
+  return res.status(HTTPStatus.OK).json(response);
 
-  }
+};
+
+export const obtenirLlistaMunicipis = (req, res, next) => {
   
-}
+  winston.log('info', 'MUNICIPI API: Serving all metadata.');
+  
+  //Carrega model de municipis
+  const imMunicipi = new mMunicipi();
+  const response = imMunicipi.donaLlista;
 
-export default  cMunicipi;
+  if(typeof response === 'undefined') res.status(HTTPStatus.INTERNAL_SERVER_ERROR).json(response);
+
+  //Retorna tota la llista
+  return res.status(HTTPStatus.OK).json(response);
+
+};
+
