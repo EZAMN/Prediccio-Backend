@@ -4,7 +4,7 @@ import winston from '../config/winston';
 import cors from 'cors';
 import errorhandler from 'errorhandler';
 import bodyParser from 'body-parser';
-import session from 'express-session';
+import HTTPStatus from 'http-status';
 var app = express();
 
 winston.log('info', 'Initializing express server.');
@@ -37,7 +37,7 @@ if (!isProduction) {
 app.use(function(req, res, next) {
     winston.log('warn', `Route not found: ${req.originalUrl}`);
     var err = new Error('Not Found');
-    err.status = 404;
+    err.status = HTTPStatus.NOT_FOUND;
     next(err);
 });
 
@@ -49,26 +49,22 @@ if (!isProduction) {
     app.use(function(err, req, res, next) {
     console.log(err.stack);
 
-    res.status(err.status || 500);
-    winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+    res.status(err.status || HTTPStatus.INTERNAL_SERVER_ERROR);
+    winston.error(`${err.status || HTTPStatus.INTERNAL_SERVER_ERROR} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
-    res.json({'errors': {
-    message: err.message,
-    error: err
-    }});
+    res.json({'error': err.message
+    });
 });
 }
 
 // production error handler
 // no permet veure stacktrace
 app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    winston.error(`${err.status || 500} - ${err.message} aaa- ${req.originalUrl} - ${req.method} - ${req.ip}`);
+    res.status(err.status || HTTPStatus.INTERNAL_SERVER_ERROR);
+    winston.error(`${err.status || HTTPStatus.INTERNAL_SERVER_ERROR} - ${err.message} aaa- ${req.originalUrl} - ${req.method} - ${req.ip}`);
 
-    res.json({'errors': {
-        message: err.message,
-        error: {}
-    }});
+    res.json({'error': err.message
+    });
 });
 
 
