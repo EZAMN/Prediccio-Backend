@@ -1,6 +1,5 @@
-import mPrediccio from '../../models/mPrediccio'
+import mPrediccio from '../../models/mPrediccio';
 import {assert} from 'chai';
-import winston from '../../config/winston'
 
 describe("the Prediccio Model", () => {
 

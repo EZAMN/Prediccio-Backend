@@ -1,6 +1,5 @@
-import mMunicipi from '../../models/mMunicipi'
+import mMunicipi from '../../models/mMunicipi';
 import {assert} from 'chai';
-import winston from '../../config/winston'
 
 describe("the Municipi Model", () => {
 

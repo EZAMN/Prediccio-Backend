@@ -16,7 +16,7 @@ describe("the server API", () => {
     while(codi404 === undefined){
         let rndCodi = Math.floor(Math.random() * Math.floor(999999))
         winston.log('info', `server.test.js: checking if ${rndCodi} is used.`);
-        let notFound = data.find(data => +data.codi === +rndCodi) === undefined;
+        let notFound = data.find(iData => +iData.codi === +rndCodi) === undefined;
         if( notFound ){
             codi404 = rndCodi;
         }else{
