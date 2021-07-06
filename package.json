@@ -9,6 +9,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "errorhandler": "^1.5.1",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-jwt": "^5.3.1",
     "express-session": "^1.16.1",
@@ -32,7 +33,7 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/mocha --require @babel/register test/**/*.test.js --exit",
-    "start": "node --require dotenv/config server.js",
+    "start": "node --require dotenv/config -r esm server.js",
     "server": "babel-node server.js",
     "dev": "npm-run-all server"
   },
